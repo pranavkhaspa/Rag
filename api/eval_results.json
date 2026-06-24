@@ -1,0 +1,65 @@
+[
+  {
+    "embedding_model": "nomic-embed-text (Ollama)",
+    "indexing_time_sec": 4.0446617603302,
+    "avg_retrieval_latency_ms": 18.50602626800537,
+    "raw_metrics": {
+      "hit_rate@1": 0.3,
+      "hit_rate@3": 0.8,
+      "hit_rate@5": 0.9,
+      "rr": 0.5416666666666666,
+      "ndcg@5": 0.6323465818787766
+    },
+    "avg_rerank_latency_ms": 39.59155082702637,
+    "total_latency_ms": 58.09757709503174,
+    "rerank_metrics": {
+      "hit_rate@1": 0.4,
+      "hit_rate@3": 0.7,
+      "hit_rate@5": 0.8,
+      "rr": 0.575,
+      "ndcg@5": 0.6192536065216309
+    }
+  },
+  {
+    "embedding_model": "all-MiniLM-L6-v2 (SentenceTransformers)",
+    "indexing_time_sec": 1.0328094959259033,
+    "avg_retrieval_latency_ms": 9.96553897857666,
+    "raw_metrics": {
+      "hit_rate@1": 0.4,
+      "hit_rate@3": 0.8,
+      "hit_rate@5": 0.8,
+      "rr": 0.6125,
+      "ndcg@5": 0.6523719014285831
+    },
+    "avg_rerank_latency_ms": 24.974679946899414,
+    "total_latency_ms": 34.940218925476074,
+    "rerank_metrics": {
+      "hit_rate@1": 0.4,
+      "hit_rate@3": 0.8,
+      "hit_rate@5": 0.9,
+      "rr": 0.625,
+      "ndcg@5": 0.6954395572359223
+    }
+  },
+  {
+    "embedding_model": "bge-small-en-v1.5 (SentenceTransformers)",
+    "indexing_time_sec": 1.6674230098724365,
+    "avg_retrieval_latency_ms": 8.810853958129883,
+    "raw_metrics": {
+      "hit_rate@1": 0.3,
+      "hit_rate@3": 0.9,
+      "hit_rate@5": 0.9,
+      "rr": 0.5833333333333333,
+      "ndcg@5": 0.6654648767857287
+    },
+    "avg_rerank_latency_ms": 23.189592361450195,
+    "total_latency_ms": 32.00044631958008,
+    "rerank_metrics": {
+      "hit_rate@1": 0.3,
+      "hit_rate@3": 0.8,
+      "hit_rate@5": 0.9,
+      "rr": 0.5583333333333333,
+      "ndcg@5": 0.6454395572359223
+    }
+  }
+]
