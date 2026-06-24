@@ -37,10 +37,12 @@ def load_eval_dataset(filepath: str) -> List[Dict[str, Any]]:
 
 def get_original_chunks() -> List[Document]:
     # Extract all chunks from the primary Chroma database
-    # Import chroma store
-    from app.vectorstore.chroma_store import ChromaStore
-    store = ChromaStore()
-    db = store.get_db()
+    from langchain_chroma import Chroma
+    from get_embedding_function import get_embedding_function
+    db = Chroma(
+        persist_directory="chroma",
+        embedding_function=get_embedding_function("nomic-embed-text")
+    )
     
     data = db.get(include=['documents', 'metadatas'])
     documents = data['documents']

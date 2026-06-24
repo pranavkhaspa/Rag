@@ -8,8 +8,8 @@ const api = axios.create({
 
 export const notebookApi = {
   list: () => api.get('/notebooks'),
-  create: (data: { title: string; description?: string; embedding_model?: string; use_reranking?: boolean }) => api.post('/notebooks', data),
-  update: (id: string, data: { title?: string; description?: string; embedding_model?: string; use_reranking?: boolean }) => api.patch(`/notebooks/${id}`, data),
+  create: (data: { title: string; description?: string; embedding_model?: string; use_reranking?: boolean; chunk_size?: number; chunk_overlap?: number }) => api.post('/notebooks', data),
+  update: (id: string, data: { title?: string; description?: string; embedding_model?: string; use_reranking?: boolean; chunk_size?: number; chunk_overlap?: number }) => api.patch(`/notebooks/${id}`, data),
   get: (id: string) => api.get(`/notebooks/${id}`),
   delete: (id: string) => api.delete(`/notebooks/${id}`),
   listDocuments: (id: string) => api.get(`/notebooks/${id}/documents`),

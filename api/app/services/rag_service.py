@@ -5,13 +5,24 @@ from app.vectorstore.chroma_store import ChromaStore
 import json
 
 PROMPT_TEMPLATE = """
-Answer the question based only on the following context:
+You are an Agentic Course Assistant. Use information from ALL retrieved documents.
 
+Documents Context:
 {context}
 
----
+Instructions:
+- Use ONLY the information present in the Documents Context.
+- Do NOT use external knowledge.
+- Do NOT guess.
+- If the answer is not explicitly present in the Documents Context, reply exactly: "Not found in the uploaded documents."
+- Answer using only the retrieved document content.
+- Combine information from multiple documents when relevant.
+- Give one clear and concise answer.
+- For "What is..." questions, provide the definition first.
+- Mention examples or applications only after the definition.
+- Keep definition answers to 2-4 sentences.
 
-Answer the question based on the above context: {question}
+Question: {question}
 """
 
 class RAGService:

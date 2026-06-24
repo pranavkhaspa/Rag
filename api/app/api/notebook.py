@@ -20,6 +20,8 @@ class NotebookUpdate(BaseModel):
     description: Optional[str] = None
     embedding_model: Optional[str] = None
     use_reranking: Optional[bool] = None
+    chunk_size: Optional[int] = None
+    chunk_overlap: Optional[int] = None
 
 @router.post("", response_model=Notebook)
 def create_notebook(notebook_in: Notebook, session: Session = Depends(get_session)):
@@ -63,6 +65,10 @@ def update_notebook(id: str, notebook_update: NotebookUpdate, session: Session =
         notebook.embedding_model = notebook_update.embedding_model
     if notebook_update.use_reranking is not None:
         notebook.use_reranking = notebook_update.use_reranking
+    if notebook_update.chunk_size is not None:
+        notebook.chunk_size = notebook_update.chunk_size
+    if notebook_update.chunk_overlap is not None:
+        notebook.chunk_overlap = notebook_update.chunk_overlap
         
     session.add(notebook)
     session.commit()

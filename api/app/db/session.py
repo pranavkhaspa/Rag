@@ -29,6 +29,14 @@ def create_db_and_tables():
                 cursor.execute("ALTER TABLE notebook ADD COLUMN use_reranking BOOLEAN DEFAULT 0")
                 print("Migration: Added 'use_reranking' column to 'notebook' table.")
                 
+            if "chunk_size" not in columns:
+                cursor.execute("ALTER TABLE notebook ADD COLUMN chunk_size INTEGER DEFAULT 500")
+                print("Migration: Added 'chunk_size' column to 'notebook' table.")
+                
+            if "chunk_overlap" not in columns:
+                cursor.execute("ALTER TABLE notebook ADD COLUMN chunk_overlap INTEGER DEFAULT 100")
+                print("Migration: Added 'chunk_overlap' column to 'notebook' table.")
+                
             conn.commit()
             conn.close()
         except Exception as e:

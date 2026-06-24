@@ -513,6 +513,8 @@ const NotebookWorkspace = () => {
               <span className="font-semibold text-indigo-400">{notebook.embedding_model}</span>
               <span className="text-zinc-700">•</span>
               <span>Rerank: <span className={notebook.use_reranking ? "text-emerald-400 font-bold" : "text-zinc-500"}>{notebook.use_reranking ? "ON" : "OFF"}</span></span>
+              <span className="text-zinc-700">•</span>
+              <span>Chunk: <span className="font-semibold text-zinc-300">{notebook.chunk_size || 500}</span> (overlap: <span className="text-zinc-500">{notebook.chunk_overlap || 100}</span>)</span>
             </div>
           )}
           <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs font-bold shadow-lg">

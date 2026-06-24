@@ -55,7 +55,11 @@ async def upload_document(id: str, file: UploadFile = File(...), session: Sessio
         if not docs:
             raise Exception("No content could be extracted from the file.")
 
-        chunks = processor.split_documents(docs)
+        dyn_processor = FileProcessor(
+            chunk_size=getattr(notebook, "chunk_size", 500),
+            chunk_overlap=getattr(notebook, "chunk_overlap", 100)
+        )
+        chunks = dyn_processor.split_documents(docs)
         if not chunks:
             raise Exception("Document splitting resulted in zero chunks.")
 

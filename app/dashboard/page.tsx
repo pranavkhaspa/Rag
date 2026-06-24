@@ -35,7 +35,9 @@ const Dashboard = () => {
     title: "", 
     description: "", 
     embedding_model: "all-MiniLM-L6-v2", 
-    use_reranking: true 
+    use_reranking: true,
+    chunk_size: 500,
+    chunk_overlap: 100
   });
   const [creating, setCreating] = useState(false);
   const [generatingTitle, setGeneratingTitle] = useState(false);
@@ -81,7 +83,9 @@ const Dashboard = () => {
         title: "", 
         description: "", 
         embedding_model: "all-MiniLM-L6-v2", 
-        use_reranking: true 
+        use_reranking: true,
+        chunk_size: 500,
+        chunk_overlap: 100
       });
       fetchNotebooks();
     } catch (error) {
@@ -196,6 +200,35 @@ const Dashboard = () => {
                     <option value="bge-small-en-v1.5">bge-small-en-v1.5 (ST Local - Fast)</option>
                     <option value="nomic-embed-text">nomic-embed-text (Ollama Local)</option>
                   </select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Chunk Size</label>
+                    <input 
+                      type="number"
+                      min={100}
+                      max={2000}
+                      step={50}
+                      className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-zinc-100"
+                      value={newNotebook.chunk_size}
+                      onChange={(e) => setNewNotebook({ ...newNotebook, chunk_size: parseInt(e.target.value) || 500 })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Chunk Overlap</label>
+                    <input 
+                      type="number"
+                      min={0}
+                      max={1000}
+                      step={10}
+                      className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-zinc-100"
+                      value={newNotebook.chunk_overlap}
+                      onChange={(e) => setNewNotebook({ ...newNotebook, chunk_overlap: parseInt(e.target.value) || 100 })}
+                    />
+                  </div>
+                </div>
+                <div className="text-[10px] text-zinc-400 -mt-2">
+                  Optimized: 500 chunk size and 100 overlap are proven best by RAG experiments.
                 </div>
                 <div className="flex items-center gap-3 py-1">
                   <input 

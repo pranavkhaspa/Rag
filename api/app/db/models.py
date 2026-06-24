@@ -17,6 +17,8 @@ class Notebook(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     embedding_model: str = Field(default="nomic-embed-text")
     use_reranking: bool = Field(default=False)
+    chunk_size: int = Field(default=500)
+    chunk_overlap: int = Field(default=100)
     
     user_id: Optional[str] = Field(default=None, foreign_key="user.id")
     user: User = Relationship(back_populates="notebooks")
