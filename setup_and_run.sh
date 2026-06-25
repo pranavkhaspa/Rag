@@ -64,18 +64,37 @@ echo "Pulling nomic-embed-text..."
 ollama pull nomic-embed-text
 
 # 4. Setup Python Virtual Environment and dependencies
-echo "--> Setting up Python virtual environment..."
-if [ ! -d ".venv" ]; then
-    python3 -m venv .venv
+echo "--> Setting up Python environment..."
+USE_VENV=false
+if [ -d ".venv" ]; then
+    source .venv/bin/activate
+    USE_VENV=true
+else
+    echo "Attempting to create a virtual environment..."
+    if python3 -m venv .venv 2>/dev/null; then
+        source .venv/bin/activate
+        pip install --upgrade pip
+        USE_VENV=true
+    else
+        echo "Warning: venv creation is not allowed or failed. Installing packages in the active system/conda environment..."
+    fi
 fi
-source .venv/bin/activate
-pip install --upgrade pip
+
 echo "Installing python dependencies..."
-pip install -r api/requirements.txt
+if [ "$USE_VENV" = true ]; then
+    pip install -r api/requirements.txt
+else
+    # Install directly into current environment
+    pip install -r api/requirements.txt
+fi
 
 # 5. Pre-download Hugging Face and NLTK models
 echo "--> Pre-downloading embedding, re-ranking, and NLTK models..."
-python api/download_models.py
+if [ "$USE_VENV" = true ]; then
+    python api/download_models.py
+else
+    python3 api/download_models.py
+fi
 
 # 6. Install Node.js dependencies and build frontend
 echo "--> Installing Node.js dependencies..."
@@ -86,7 +105,11 @@ npm run build
 # 7. Start FastAPI Backend in background
 echo "--> Starting FastAPI Backend..."
 cd api
-../.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 > backend.log 2>&1 &
+if [ "$USE_VENV" = true ]; then
+    ../.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 > backend.log 2>&1 &
+else
+    python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 > backend.log 2>&1 &
+fi
 BACKEND_PID=$!
 cd ..
 
