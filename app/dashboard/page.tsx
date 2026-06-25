@@ -122,17 +122,23 @@ const Dashboard = () => {
     });
   };
 
-  const filteredNotebooks = notebooks.filter(nb => {
-    const matchesSearch = nb.title.toLowerCase().includes(searchQuery.toLowerCase());
-    if (!matchesSearch) return false;
+  const filteredNotebooks = notebooks
+    .filter(nb => {
+      const matchesSearch = nb.title.toLowerCase().includes(searchQuery.toLowerCase());
+      if (!matchesSearch) return false;
 
-    if (view === "recent") {
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      return new Date(nb.created_at) > weekAgo;
-    }
-    return true;
-  });
+      if (view === "recent") {
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        return new Date(nb.updated_at || nb.created_at) > weekAgo;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.updated_at || a.created_at);
+      const dateB = new Date(b.updated_at || b.created_at);
+      return dateB.getTime() - dateA.getTime();
+    });
 
   return (
     <div className="min-h-screen bg-[#09090B] text-zinc-100 flex relative selection:bg-indigo-500/30">

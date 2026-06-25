@@ -15,6 +15,7 @@ class Notebook(SQLModel, table=True):
     title: str
     description: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
     embedding_model: str = Field(default="nomic-embed-text")
     use_reranking: bool = Field(default=False)
     chunk_size: int = Field(default=500)
@@ -61,6 +62,7 @@ class Quiz(SQLModel, table=True):
     id: str = Field(default_factory=lambda: f"quiz_{uuid.uuid4().hex[:8]}", primary_key=True)
     topic: str
     score: Optional[int] = None
+    submitted_answers: Optional[str] = Field(default=None) # JSON list of integers
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
     notebook_id: Optional[str] = Field(default=None, foreign_key="notebook.id")
@@ -73,6 +75,8 @@ class QuizQuestion(SQLModel, table=True):
     question_text: str
     options: str  # JSON string or comma-separated
     correct_option: int
+    explanation: Optional[str] = Field(default=None)
+    explanations: Optional[str] = Field(default=None) # JSON list of strings parallel to options
     
     quiz_id: str = Field(foreign_key="quiz.id")
     quiz: Quiz = Relationship(back_populates="questions")

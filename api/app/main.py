@@ -1,3 +1,18 @@
+import os
+
+# Load environment variables from .env if it exists
+for env_path in [".env", "../.env", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")]:
+    if os.path.exists(env_path):
+        try:
+            with open(env_path) as f:
+                for line in f:
+                    if "=" in line and not line.strip().startswith("#"):
+                        key, val = line.strip().split("=", 1)
+                        os.environ[key.strip()] = val.strip().strip('"').strip("'")
+            break
+        except Exception as e:
+            pass
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.session import create_db_and_tables

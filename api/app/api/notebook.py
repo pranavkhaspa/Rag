@@ -3,6 +3,7 @@ from sqlmodel import Session, select
 from typing import List, Optional
 from pydantic import BaseModel
 import json
+from datetime import datetime
 from app.db.models import Notebook, User
 from app.db.session import get_session
 from app.vectorstore.chroma_store import ChromaStore
@@ -42,13 +43,21 @@ def create_notebook(notebook_in: Notebook, session: Session = Depends(get_sessio
 
 @router.get("", response_model=List[Notebook])
 def list_notebooks(session: Session = Depends(get_session)):
-    return session.exec(select(Notebook)).all()
+    statement = select(Notebook).order_by(Notebook.updated_at.desc())
+    return session.exec(statement).all()
 
 @router.get("/{id}", response_model=Notebook)
 def get_notebook(id: str, session: Session = Depends(get_session)):
     notebook = session.get(Notebook, id)
     if not notebook:
         raise HTTPException(status_code=404, detail="Notebook not found")
+    
+    # Update last opened/accessed time
+    notebook.updated_at = datetime.utcnow()
+    session.add(notebook)
+    session.commit()
+    session.refresh(notebook)
+    
     return notebook
 
 @router.patch("/{id}", response_model=Notebook)

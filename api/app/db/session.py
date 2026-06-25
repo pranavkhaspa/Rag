@@ -37,6 +37,26 @@ def create_db_and_tables():
                 cursor.execute("ALTER TABLE notebook ADD COLUMN chunk_overlap INTEGER DEFAULT 100")
                 print("Migration: Added 'chunk_overlap' column to 'notebook' table.")
                 
+            if "updated_at" not in columns:
+                cursor.execute("ALTER TABLE notebook ADD COLUMN updated_at DATETIME")
+                cursor.execute("UPDATE notebook SET updated_at = created_at WHERE updated_at IS NULL")
+                print("Migration: Added 'updated_at' column to 'notebook' table.")
+                
+            cursor.execute("PRAGMA table_info(quiz)")
+            columns_quiz = [col[1] for col in cursor.fetchall()]
+            if "submitted_answers" not in columns_quiz:
+                cursor.execute("ALTER TABLE quiz ADD COLUMN submitted_answers VARCHAR")
+                print("Migration: Added 'submitted_answers' column to 'quiz' table.")
+                
+            cursor.execute("PRAGMA table_info(quizquestion)")
+            columns_q = [col[1] for col in cursor.fetchall()]
+            if "explanation" not in columns_q:
+                cursor.execute("ALTER TABLE quizquestion ADD COLUMN explanation VARCHAR")
+                print("Migration: Added 'explanation' column to 'quizquestion' table.")
+            if "explanations" not in columns_q:
+                cursor.execute("ALTER TABLE quizquestion ADD COLUMN explanations VARCHAR")
+                print("Migration: Added 'explanations' column to 'quizquestion' table.")
+                
             conn.commit()
             conn.close()
         except Exception as e:

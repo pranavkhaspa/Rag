@@ -72,10 +72,16 @@ def generate_quiz(id: str, req: QuizGenerateRequest, session: Session = Depends(
                 except:
                     co = 0
 
+                explanation_val = q.get("explanation", "")
+                explanations_val = q.get("explanations", [])
+                explanations_str = json.dumps(explanations_val) if isinstance(explanations_val, list) else "{}"
+
                 db_q = QuizQuestion(
                     question_text=q.get("question_text", "Untitled Question"),
                     options=options_str,
                     correct_option=co,
+                    explanation=explanation_val,
+                    explanations=explanations_str,
                     quiz_id=db_quiz.id
                 )
                 session.add(db_q)
@@ -89,7 +95,9 @@ def generate_quiz(id: str, req: QuizGenerateRequest, session: Session = Depends(
                 "id": q.id,
                 "question_text": q.question_text,
                 "options": q.options,
-                "correct_option": q.correct_option
+                "correct_option": q.correct_option,
+                "explanation": q.explanation,
+                "explanations": q.explanations
             })
             
         return {
@@ -110,6 +118,8 @@ def generate_quiz(id: str, req: QuizGenerateRequest, session: Session = Depends(
             question_text=f"Error generating quiz for {req.topic}. Please try again.",
             options="Try Again|Change Topic",
             correct_option=0,
+            explanation="An error occurred during generation. Please try again.",
+            explanations=json.dumps(["Please try again.", "Please try again."]),
             quiz_id=db_quiz.id
         )
         session.add(db_q)
@@ -119,7 +129,14 @@ def generate_quiz(id: str, req: QuizGenerateRequest, session: Session = Depends(
             "topic": db_quiz.topic,
             "created_at": db_quiz.created_at.isoformat(),
             "notebook_id": db_quiz.notebook_id,
-            "questions": [{"id": db_q.id, "question_text": db_q.question_text, "options": db_q.options, "correct_option": db_q.correct_option}]
+            "questions": [{
+                "id": db_q.id,
+                "question_text": db_q.question_text,
+                "options": db_q.options,
+                "correct_option": db_q.correct_option,
+                "explanation": db_q.explanation,
+                "explanations": db_q.explanations
+            }]
         }
 
 @router.get("/quizzes/{quiz_id}", response_model=Quiz)
@@ -153,6 +170,7 @@ def submit_quiz(quiz_id: str, req: QuizSubmitRequest, session: Session = Depends
             results.append({"question": quiz.questions[i].question_text, "correct": is_correct})
     
     quiz.score = score
+    quiz.submitted_answers = json.dumps(req.answers)
     session.add(quiz)
     session.commit()
             

@@ -150,7 +150,14 @@ class RAGService:
              return json.dumps([{
                 "question_text": "No context found. Please upload more documents about this topic.",
                 "options": ["Understood", "Okay", "Will do", "Got it"],
-                "correct_option": 0
+                "correct_option": 0,
+                "explanation": "Please upload documents to build your knowledge base.",
+                "explanations": [
+                    "Please upload documents to begin learning.",
+                    "Please upload documents to begin learning.",
+                    "Please upload documents to begin learning.",
+                    "Please upload documents to begin learning."
+                ]
             }])
 
         context_text = "\n\n".join([doc.page_content for doc, _score in results])
@@ -162,8 +169,15 @@ class RAGService:
         Format per object:
         {{
             "question_text": "the question",
-            "options": ["A", "B", "C", "D"],
-            "correct_option": 0
+            "options": ["Option A", "Option B", "Option C", "Option D"],
+            "correct_option": 0,
+            "explanation": "Detailed explanation of why the correct option is right.",
+            "explanations": [
+                "Detailed explanation of why option 1 (Option A) is correct or incorrect",
+                "Detailed explanation of why option 2 (Option B) is correct or incorrect",
+                "Detailed explanation of why option 3 (Option C) is correct or incorrect",
+                "Detailed explanation of why option 4 (Option D) is correct or incorrect"
+            ]
         }}
 
         Context:
@@ -182,7 +196,14 @@ class RAGService:
             return json.dumps([{
                 "question_text": f"Error generating quiz for {topic}.",
                 "options": ["Retry", "Change Topic", "Check Material", "Wait"],
-                "correct_option": 0
+                "correct_option": 0,
+                "explanation": "An error occurred during generation. Please try again.",
+                "explanations": [
+                    "Retry the generation",
+                    "Change the quiz topic",
+                    "Check the study material",
+                    "Wait and try later"
+                ]
             }])
 
     def evaluate_assignment(self, notebook_id: str, question: str, student_answer: str, source_names=None, use_reranking=False):
